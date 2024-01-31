@@ -1,0 +1,227 @@
+#include <iostream>
+#include <cassert>
+using namespace std;
+template <typename T>
+class CircleQueue
+{
+	T* _arr;
+	int _front;
+	int _rear;
+	const int _max;
+
+public:
+	CircleQueue(int max) :_max(SetMax(max))
+	{
+
+
+
+		_front = -1;
+		_rear = -1;
+		_arr = new T[_max];
+	}
+
+	T SetMax(int max)
+	{
+		if (max <= 0 || max >= 1001)
+			assert(!"Minimum 1, maksimum 1000 olabiler");
+		return max;
+	}
+	bool IsFull()
+	{
+		return (_rear + 1) % _max == _front;
+	}
+
+	bool IsEmpty()
+	{
+		return _front == -1;
+	}
+
+	void Add(T item)
+	{
+		if (IsFull())
+			assert(!"Queue is Full");
+
+		if (_front == -1)
+			_front = 0;
+
+		_rear = (_rear + 1) & _max;
+
+		_arr[_rear] = item;
+
+	}
+
+	void Remove()
+	{
+		if (IsEmpty())
+			assert(!"Queue is Empty");
+
+		if (_front == _rear)
+		{
+			_front = -1;
+			_rear = -1;
+			return;
+		}
+		_front == (_front + 1) % _max;
+	}
+
+	T GetFront()
+	{
+		if (IsEmpty()) assert(!"Bosdur");
+		return _arr[_front];
+
+	}
+	T GetRear()
+	{
+		if (IsEmpty()) assert(!"Bosdur");
+		return _arr[_rear];
+
+	}
+	void Print()
+	{
+
+		if (IsEmpty())
+		{
+			cout << "[]" << endl;
+			return;
+		}
+		int i;
+		cout << "[";
+		for (i = _front; i != _rear; i = (i + 1) % _max)
+			cout << _arr[i] << ", ";
+		cout << _arr[i] << "]" << endl;
+
+
+	}
+};
+
+
+template <typename T>
+class Dequeue
+{
+	T* _arr;
+	int _front;
+	int _rear;
+	const int _max;
+	int _count;
+public:
+	Dequeue(int max):_max(SetMax(max))
+	{
+		_arr = new T[_max];
+		_front = 0;
+		_rear = 0;
+	}
+	int SetMax(int max)
+	{
+		if (max >= 1 && max <= 1000)
+			return max;
+		assert(!"Minimum 1 maksimum 100 ola biler");
+	}
+	void Add_Front(int item)
+	{
+		if (IsFull()) assert(!"Doludur");
+
+		if (IsEmpty())
+		{
+			_arr[_front] = item;
+			_count++;
+			return;
+
+
+		}
+		_front = (_max + _front - 1) % _max;
+
+		_arr[_front] = item;
+		_count++;
+	}
+	void Add_Rear(int item)
+	{
+		if (IsFull()) assert(!"Doludur");
+
+		if (IsEmpty())
+		{
+			_arr[_rear] = item;
+			_count++;
+			return;
+
+
+		}
+		_rear = (_rear + 1) % _max;
+
+		_arr[_rear] = item;
+		_count++;
+	}
+
+	void Remove_Rear()
+	{
+		if (IsEmpty()) assert(!"doludur");
+
+		_rear = (_max + _rear - 1) % _max;
+		_count--;
+	}
+	void Remove_Front()
+	{
+		if (IsEmpty()) assert(!"doludur");
+
+		_front = (_front + 1) % _max;
+		_count--;
+	}
+
+
+	T GetFront()
+	{
+		if (IsEmpty()) assert(!"Bosdur");
+		return _arr[_front];
+
+	}
+	T GetRear()
+	{
+		if (IsEmpty()) assert(!"Bosdur");
+		return _arr[_rear];
+
+	}
+
+
+	bool IsFull()
+	{
+
+		return _count == _max;
+
+	}
+	bool IsEmpty()
+	{
+		return _count == 0;
+	}
+
+	void Print()
+	{
+		if (IsEmpty())
+		{
+			cout << "[]" << endl;
+			return;
+		}
+		int i;
+		cout << "[";
+		for (i = _front; i != _rear; i = (i + 1) % _max)
+			cout << _arr[i] << ", ";
+		cout << _arr[i] << "]" << endl;
+	}
+	//Destructor
+	~Dequeue()
+	{
+		if (_arr != nullptr) delete[] _arr;
+	}
+};
+
+int main() {
+    Dequeue<int> myDeque(5);
+	myDeque.Print();
+	myDeque.Add_Front(31);
+	myDeque.Add_Front(31);
+	myDeque.Add_Rear(32);
+	myDeque.Add_Rear(32);
+	myDeque.Print();
+	myDeque.Remove_Front();
+	myDeque.Remove_Rear();
+	myDeque.Print();
+    
+}
